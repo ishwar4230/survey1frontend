@@ -1,0 +1,56 @@
+/* .main{
+    background-image: url("https://www.tripsavvy.com/thmb/pT_ZAje6cYUx8w2b4nsCk3FrxRU=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/car-traveling-along-winding-road--maui--hawaii--america--usa-737142515-9d7096b173654472968075d805273c8f.jpg");
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    
+} */
+#bg{
+    position: fixed;
+    background-size: cover;
+    z-index: -2;
+    opacity: 0.8;
+}
+.main{
+    display: flex;
+    flex-direction: column;
+    /* background-color: rgb(248, 252, 252); */
+}
+.total{
+    
+    width: 80%;
+    margin: auto;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px 0 rgba(202, 189, 189, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+    font-size: 130%;
+    padding: 15px;
+    background-color: aliceblue;
+}
+.head{
+    
+}
+.headp1{
+   
+}
+.textb{
+    height: 25px;
+    border-radius: 5px;
+    font-size: 80%;
+}
+#nextbut{
+    width: 80px;
+    height: 40px;
+    font-size: 150%;
+    border-radius: 5px;
+    margin-left: 10%;
+    transition-duration: 0.5s;
+    margin-bottom: 50px;
+    border-color: rgb(126, 8, 8);
+}
+#nextbut:hover{
+    background-color: rgb(150, 118, 122);
+    color: rgb(245, 245, 245);
+}
+radio:hover{
+  
+}
