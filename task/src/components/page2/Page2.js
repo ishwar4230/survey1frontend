@@ -47,10 +47,37 @@ console.log("abc");
        Setlat2(lat2);
        setlong2(long2);
        setloading(false);
+
       //console.log(lat2,long2);
     }
 
   })
+
+  let arr = [], a = [];
+  var j = 1;
+  for (var i = 0; i < 10; i++) {
+    arr[i] = j++;
+    a[i] = "abc";
+  }
+
+  const [qn, setqn] = useState(a);
+  
+
+  const changearr = (ind, val) => {
+    let temp = qn;
+    temp[ind] = val;
+    setqn(temp);
+    
+  };
+  
+  
+  if(isloading)
+{
+  return <div className='loading'>
+    <h1>Loading ...</h1>
+    <div className='loader'></div>
+    </div>
+}
 
 
   console.log(orgn_lat, dest_lat, orgn_long, dest_long);
@@ -147,12 +174,7 @@ console.log("abc");
 
 
 
-  let arr = [], a = [];
-  var j = 1;
-  for (var i = 0; i < 10; i++) {
-    arr[i] = j++;
-    a[i] = "abc";
-  }
+ 
   let alternatives = ["Bus", "Car", "Bike"];
   let alt_values = [[[bus_c[0], bus_c[1], bus_c[2]], [bus_t[0], bus_t[1], bus_t[2]]], [[car_c[0], car_c[1], car_c[2]], [car_t[0], car_t[1], car_t[2]]], [[car_c[0]/3.0, car_c[1]/3.0, car_c[2]/3.0],[2.0*car_t[0], 2.0*car_t[1], 2.0*car_t[2]]]];
   for(var i=0;i<alt_values.length;i++)
@@ -165,21 +187,9 @@ console.log("abc");
       }
     }
   }
-  const [qn, setqn] = useState(a);
-  const changearr = (ind, val) => {
-    let temp = qn;
-    temp[ind] = val;
-    setqn(temp);
-    
-  };
-  
-  if(isloading)
-{
-  return <div className='loading'>
-    <h1>Loading ...</h1>
-    <div className='loader'></div>
-    </div>
-}
+ 
+
+
   let full_fact = [];
   let totrow = Math.pow(level, attrib), totcol = attrib;
   for (var i = 0; i < totrow; i++) {
@@ -442,13 +452,13 @@ console.log("abc");
 
         {arr.map((x, ind) => {
           return (
-            <div className='choice'>
+            <div className='choice' key={x.toString()}>
               <h2 className='num'>({ind + 1})</h2>
 
 
               {alternatives.map((value, index) => {
                 return (
-                  <div>
+                  <div key={value.toString()}>
                     <input type="radio" name={ind + 1} value={value} onChange={(e) => changearr(ind, e.target.value)} />
                     <label className='lab'>{value} with Travel-Cost: Rs{alt_values[index][0][dopt[x - 1][2 * index] + 1]} and Travel-Time : {alt_values[index][1][dopt[x - 1][2 * index + 1] + 1]} hr</label>
                   </div>
