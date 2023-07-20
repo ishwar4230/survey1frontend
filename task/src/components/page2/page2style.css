@@ -6,7 +6,7 @@
        */
 
        .page2tot{
-        width: 90%;
+        width: 95%;
         
         box-shadow: 0 4px 8px 0 rgba(202, 189, 189, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         border-radius: 4%;
@@ -24,13 +24,19 @@
        }
        .choice{
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
-        width: 80%;
+        justify-content: space-evenly;
+        width: 90%;
         box-shadow: 0 4px 8px 0 rgba(202, 189, 189, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         border-radius: 20px;
         padding-bottom: 20px;
+        padding-top: 20px;
         margin-bottom: 20px;
+       }
+       .alts{
+        display: flex;
+        flex-direction: row;
        }
        button{
         /* width: 80px; */

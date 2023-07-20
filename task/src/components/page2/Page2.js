@@ -1,10 +1,12 @@
 import React from 'react'
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom'
+
 import "./page2style.css";
 const Page2 = () => {
 
   const request = require('request');
+  const Matrix = require('matrixmath/Matrix');
   let url = 'https://api.opencagedata.com/geocode/v1/json?key=d3efb0eb93ac4011b071c4454be325bc&q=';
   const location = useLocation();
   const data = location.state;
@@ -128,7 +130,7 @@ console.log("abc");
   let car_c = [0.8 * cost_car, cost_car, 1.2 * cost_car];
 
 
-  let level = 3, attrib = 6;
+ 
 
 
 
@@ -173,16 +175,18 @@ console.log("abc");
   // }
 
 
-
+  let level = 3, attrib = 8;
  
-  let alternatives = ["Bus", "Car", "Bike"];
-  let alt_values = [[[bus_c[0], bus_c[1], bus_c[2]], [bus_t[0], bus_t[1], bus_t[2]]], [[car_c[0], car_c[1], car_c[2]], [car_t[0], car_t[1], car_t[2]]], [[car_c[0]/3.0, car_c[1]/3.0, car_c[2]/3.0],[2.0*car_t[0], 2.0*car_t[1], 2.0*car_t[2]]]];
+  const alternatives = ["Bus", "Car", "Bike","Train"];
+  const attributes = [["cost (in Rs)","time (in Hrs)"],["cost (in Rs)","time (in Hrs)"],["cost (in Rs)","time (in Hrs)"],["cost (in Rs)","time (in Hrs)"]];
+  const alt_values = [[[bus_c[0], bus_c[1], bus_c[2]], [bus_t[0], bus_t[1], bus_t[2]]], [[car_c[0], car_c[1], car_c[2]], [car_t[0], car_t[1], car_t[2]]], [[car_c[0]/3.0, car_c[1]/3.0, car_c[2]/3.0],[2.0*car_t[0], 2.0*car_t[1], 2.0*car_t[2]]],[[bus_c[0]/5, bus_c[1]/5, bus_c[2]/5],[bus_t[0]/5,bus_t[1]/5,bus_t[2]/5]]];
   for(var i=0;i<alt_values.length;i++)
   {
-    for(var j=0;j<alt_values[0].length;j++)
+    for(var j=0;j<alt_values[i].length;j++)
     {
-      for(var k=0;k<alt_values[0][0].length;k++)
+      for(var k=0;k<alt_values[i][j].length;k++)
       {
+        
         alt_values[i][j][k]=(Math.round(100*alt_values[i][j][k])/100);
       }
     }
@@ -223,7 +227,7 @@ console.log("abc");
 
   console.log(full_fact);
 
-  let dtemp = [], d_row = 27, d_col = attrib;          //no of row required here
+  let dtemp = [], d_row = 10, d_col = attrib;          //no of row required here
   for (var i = 0; i < d_row; i++) {
     dtemp[i] = [];
     for (var j = 0; j < d_col; j++) {
@@ -242,69 +246,75 @@ console.log("abc");
     }
   }
 
-
-  const multiply = (m1, m2, mat1, n1, n2, mat2, res) => {
-
+//console.log(1000000000000000000004+1000000000000000000004);
+  const multiply =  (mat1,mat2) => {
+  
     let x, i, j;
-    for (i = 0; i < m1; i++) {
-      for (j = 0; j < n2; j++) {
+    let res=new Array(mat1.length);
+    for( i=0;i<mat1.length;i++)
+    res[i]=new Array(mat2[0].length);
+
+    for (i = 0; i < mat1.length; i++) {
+      for (j = 0; j < mat2[0].length; j++) {
         res[i][j] = 0;
-        for (x = 0; x < m2; x++) {
-          res[i][j] += mat1[i][x] * mat2[x][j];
+        let tp=0;
+        for (x = 0; x < mat2.length; x++) {
+          tp += (mat1[i][x] * mat2[x][j]);
         }
+       // console.log(i,j,tp);
+        res[i][j]=tp;
       }
     }
+   // console.log(res);
+    return res;
   }
 
-  const determinant = (mat, n) => {
-    var num1, num2, det = 1, index,
-      total = 1, k;
+  const determinant = (mattest, n) => {
 
-    // temporary array for storing row
-    var temp = Array(n + 1).fill(0);
-
-    for (i = 0; i < n; i++) {
-      index = i; // initialize the index
-
-      while (index < n && mat[index][i] == 0) {
-        index++;
-      }
-      if (index == n) // if there is non zero element
-      {
-        continue;
-      }
-      if (index != i) {
-        // and index row
-        for (j = 0; j < n; j++) {
-          swap(mat, index, j, i, j);
+    let matrix=JSON.parse(JSON.stringify(mattest));
+    //console.log(matrix);
+    // Base case: if the matrix is 2x2, return the determinant
+    const copy = matrix.map(row => [...row]);
+  
+    let det = 1;
+    
+    // Forward elimination
+    for (let i = 0; i < n - 1; i++) {
+      const pivot = copy[i][i];
+      
+      // If the pivot is zero, find a non-zero pivot below
+      if (pivot === 0) {
+        let found = false;
+        for (let j = i + 1; j < n; j++) {
+          if (copy[j][i] !== 0) {
+            [copy[i], copy[j]] = [copy[j], copy[i]]; // Swap rows
+            det *= -1; // Multiply determinant by -1 for row swap
+            found = true;
+            break;
+          }
         }
-        det = parseInt((det * Math.pow(-1, index - i)));
-      }
-
-      for (j = 0; j < n; j++) {
-        temp[j] = mat[i][j];
-      }
-
-      // element
-      for (j = i + 1; j < n; j++) {
-        num1 = temp[i]; // value of diagonal element
-        num2 = mat[j][i]; // value of next row element
-
-        for (k = 0; k < n; k++) {
-          // multiplying to make the diagonal
-          // element and next row element equal
-          mat[j][k] = (num1 * mat[j][k])
-            - (num2 * temp[k]);
+        
+        // If no non-zero pivot is found, the determinant is zero
+        if (!found) {
+          return 0;
         }
-        total = total * num1; // Det(kA)=kDet(A);
+      }
+      
+      for (let j = i + 1; j < n; j++) {
+        const factor = copy[j][i] / pivot;
+        
+        for (let k = i; k < n; k++) {
+          copy[j][k] -= copy[i][k] * factor;
+        }
       }
     }
-
-    // determinant
-    for (i = 0; i < n; i++) {
-      det = det * mat[i][i];
+    
+    // Calculate the determinant as the product of the main diagonal elements
+    for (let i = 0; i < n; i++) {
+      det *= copy[i][i];
     }
-    return (det / total);
+   // console.log(copy);
+    return det;
   }
 
   const swap = (arr, i1, j1, i2,
@@ -315,25 +325,31 @@ console.log("abc");
     return arr;
   }
 
-  const calc = (a) => {
-    // for(var i=0;i<a.length;i++)
-    // {
-    //   a[i].unshift(1);
-    // }
+  const calc =   (array) => {
+    let a=JSON.parse(JSON.stringify(array));
+
+    for(var i=0;i<a.length;i++)
+    a[i].unshift(1);
 
     let b = new Array(a[0].length);
     for (var i = 0; i < b.length; i++) {
       b[i] = new Array(a.length);
     }
-    transpose(a, b);
-    // console.log(b);
+     transpose(a, b);
+   // console.log(a);
+    //console.log(b);
     let r = b.length;
-    let res = new Array(r);
-    for (var i = 0; i < r; i++) {
-      res[i] = new Array(r);
-    }
-    multiply(b.length, b[0].length, b, a.length, a[0].length, a, res);
-    let ans = determinant(res, res.length);
+    
+    let res = JSON.parse(JSON.stringify(multiply(b, a)));
+   
+   //console.log(res);
+   var tempres=JSON.parse(JSON.stringify(res));
+   //console.log(tempres);
+
+    let ans = determinant(tempres, tempres.length);
+    //console.log(determinant(tempres, tempres.length));
+    //console.log(tempres);
+
     return ans;
   }
 
@@ -355,8 +371,9 @@ console.log("abc");
       i++;
     }
   }
-  for(var i=0;i<indarr.length;i++)
-  indarr[i]=i+1;
+  // for(var i=0;i<indarr.length;i++)
+  // indarr[i]=i+1;
+  //indarr=[1,2,3,4,5,6,7,8,9,10];
   console.log(indarr);
 
   let bestdet;
@@ -365,25 +382,31 @@ console.log("abc");
     dtemp[i] = full_fact[indarr[i]];
 
   }
+  console.log(dtemp);
+  console.log(calc(dtemp));
   bestdet = calc(dtemp);
-  let besti, bestj;
+  let besti=0, bestj=0;
 
 
   const get_dopt = () => {
-
+     // console.log("entered");
     //let row=dtemp.length;
     //  indarr=[];
 
-    for (var i = 0; i < dtemp.length; i++) {
+    for (var i = 0; i < d_row; i++) {
       for (var j = 0; j < totrow; j++) {
+        //console.log(i,j);
         let ind = indarr[i];
         indarr[i] = j;
         if (hasduplicate(indarr)) {
+         
           indarr[i] = ind;
           continue;
         }
         dtemp[i] = full_fact[j];
-        if (calc(dtemp) <= bestdet) {
+        //console.log(calc(dtemp));
+        if (Math.round(calc(dtemp)) <= Math.round(bestdet)) {
+          //console.log(i,j,calc(dtemp));
           indarr[i] = ind;
           dtemp[i] = full_fact[ind];
           continue;
@@ -392,8 +415,9 @@ console.log("abc");
         bestdet = calc(dtemp);
         indarr[i] = ind;
         dtemp[i] = full_fact[ind];
+        
         besti = i; bestj = j;
-        return;
+       // return;
         //console.log(i, j, bestdet);
       }
 
@@ -401,17 +425,21 @@ console.log("abc");
 
     // dopt = dtemp;
   }
-  // get_dopt();
-  for (var k = 0; k < 500; k++) {
+  //  get_dopt();
+  //  console.log(besti,bestj);
+  //  get_dopt();
+  //  console.log(besti,bestj);
+  for (var k = 0; k < 10; k++) {
     let olddet = bestdet;
     get_dopt();
+    console.log(besti,bestj);
     indarr[besti] = bestj;
     dtemp[besti] = full_fact[bestj];
     console.log(`iteration ${k + 1}: ` + olddet, bestdet);
-    if (bestdet <= olddet)
-      break;
+    // if (bestdet <= olddet)
+    //   break;
   }
-  // console.log(`frac fact det: ${calc(fact)}`);
+  //console.log(`frac fact det: ${calc(fact)}`);
   let deff = 100 * (Math.pow(bestdet, 1 / attrib)) / d_row;
   console.log("D-eff : " + deff + "%");
   console.log(dtemp);
@@ -423,7 +451,7 @@ console.log("abc");
     try {
       let result = await fetch("http://localhost:5000/submit", {
         method: 'post',
-        body: JSON.stringify({ origin: origin, destination: destn, distance: distance, bus_cost: cost_bus, bus_time: time_bus, car_cost: cost_car, car_time: time_car, choice_matrix: dopt, tags: qn }),
+        body: JSON.stringify({ origin: origin, destination: destn, distance: distance, alternatives: alternatives, attributes:attributes, attributes_values:alt_values, choice_matrix: dopt, tags: qn }),
         headers: {
           'Content-Type': 'application/json'
         },
@@ -435,6 +463,15 @@ console.log("abc");
       console.log("ssss");
     }
 
+  }
+
+  const get_dopt_ind = (altind,attind)=>{
+              let dopt_ind=0;
+              for(var i=0;i<altind;i++)
+              dopt_ind+=attributes[i].length;
+
+              dopt_ind+=attind;
+              return dopt_ind;
   }
   if(isloading)
 {
@@ -453,14 +490,24 @@ console.log("abc");
         {arr.map((x, ind) => {
           return (
             <div className='choice' key={x.toString()}>
-              <h2 className='num'>({ind + 1})</h2>
+              {/* <h2 className='num'>({ind + 1})</h2> */}
 
 
-              {alternatives.map((value, index) => {
+              {alternatives.map((altname, index) => {
                 return (
-                  <div key={value.toString()}>
-                    <input type="radio" name={ind + 1} value={value} onChange={(e) => changearr(ind, e.target.value)} />
-                    <label className='lab'>{value} with Travel-Cost: Rs{alt_values[index][0][dopt[x - 1][2 * index] + 1]} and Travel-Time : {alt_values[index][1][dopt[x - 1][2 * index + 1] + 1]} hr</label>
+                  <div className='alts' key={altname.toString()}>
+                    <input type="radio" name={ind + 1} value={altname} onChange={(e) => changearr(ind, e.target.value)} />
+                    <label className='lab'>
+                      <p>{altname} with :-</p>
+                    {attributes[index].map((attname, attind) =>{
+                      return (
+                            <div key={attname.toString()}>
+                               {attname} : {alt_values[index][attind][1+dopt[x-1][get_dopt_ind(index,attind)]]}
+                            </div>
+                      );
+                    })}
+                    </label>
+                    {/* <label className='lab'>{value} with Travel-Cost: Rs{alt_values[index][0][dopt[x - 1][2 * index] + 1]} and Travel-Time : {alt_values[index][1][dopt[x - 1][2 * index + 1] + 1]} hr</label> */}
                   </div>
                 );
               })}

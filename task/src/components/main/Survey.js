@@ -5,6 +5,11 @@ import "./surStyle.css";
 import Page2 from "../page2/Page2"
 import tripimg from "../images/road-trip.jpg"
 const Survey = () => {
+
+    // Install math.js library via npm:
+// npm install mathjs
+
+
     const navigate = useNavigate();
 
 
