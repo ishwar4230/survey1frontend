@@ -7,7 +7,7 @@ import tripimg from "../images/road-trip.jpg"
 const Survey = () => {
 
     // Install math.js library via npm:
-// npm install mathjs
+    // npm install mathjs
 
 
     const navigate = useNavigate();
@@ -30,6 +30,7 @@ const Survey = () => {
     const [crowd, Setcrowd] = useState("");
     const data = { purpose, origin, destn, timeb, traveltime, travelcost, transfer, mode, regularity, sitting, crowd };
     const navigatetopage2 = () => {
+        console.log(data);
         navigate("/page2", { state: data });
     };
 
@@ -58,31 +59,31 @@ const Survey = () => {
 
                 <p className='headp1'>Please answer the following questions according to your last trip </p>
             </div>
-            {/* <div className='email' className='total'>
+            {/* <div className='email total'>
                 <p>Enter your email</p>
-                <input type="email" name="email" className='textb' />
+              
+                <select name="cars" className="drop-down" onChange={(e)=>{console.log(e.target.value)}}>
+                    <option value="">select</option>
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="opel">Opel</option>
+                    <option value="audi">Audi</option>
+                </select>
             </div> */}
             <div className='purpose total'>
                 <p>The Purpose of Your last/daily trip reported here</p>
-                <input type="radio" name="rd1" value="work" onChange={(e) => SetPurpose(e.target.value)}></input>
-                <label>work</label>
-                <br />
-                <input type="radio" value="education" onChange={(e) => SetPurpose(e.target.value)} name="rd1"></input>
-                <label>Education</label>
-                <br />
-                <input type="radio" value="shopping" onChange={(e) => SetPurpose(e.target.value)} name="rd1"></input>
-                <label>Shopping</label>
-                <br />
-                <input type="radio" value="Recreational" onChange={(e) => SetPurpose(e.target.value)} name="rd1"></input>
-                <label>Recreational</label>
-                <br />
-                <input type="radio" value="Other" onChange={(e) => SetPurpose(e.target.value)} name="rd1"></input>
-                <label>Other</label>
+                <select name='purpose' className='drop-down' onChange={(e) => SetPurpose(e.target.value)}>
+                <option value="">select</option>
+                    <option value="work">work</option>
+                    <option value="Education">Education</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Recreational">Recreational</option>
+                    <option value="Other">Other</option>
 
-
-
-
+                </select>
+              
             </div>
+
             <div className='origin total'>
                 <p>State your trip origin </p>
                 <input type="text" value={origin} onChange={(e) => setOrigin(e.target.value)} name="origin" className='textb' />
@@ -109,13 +110,14 @@ const Survey = () => {
             </div>
             <div className='samemode total'>
                 <p>Same travel mode throughout the trip</p>
-                <input type="radio" value="yes" onChange={(e) => Setmode(e.target.value)} name="rd2"></input>
-                <label>Yes</label>
-                <br />
-                <input type="radio" value="no" onChange={(e) => Setmode(e.target.value)} name="rd2"></input>
-                <label>No</label><br />
-                <input type="radio" value="maybe" onChange={(e) => Setmode(e.target.value)} name="rd2"></input>
-                <label>Maybe</label>
+                <select name='samemode' className='drop-down' onChange={(e) => Setmode(e.target.value)}>
+                <option value="">select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                    <option value="Maybe">Maybe</option>
+                    
+
+                </select>
             </div>
             <div className='regularity total'>
                 <p>Regularity of travelling</p>
@@ -137,18 +139,16 @@ const Survey = () => {
             </div>
             <div className='level total'>
                 <p>Level of crowding</p>
-                <input type="radio" value="1" onChange={(e) => Setcrowd(e.target.value)} name="rd5"></input>
-                <label>Level 1</label><br />
-                <input type="radio" value="2" onChange={(e) => Setcrowd(e.target.value)} name="rd5"></input>
-                <label>Level 2</label><br />
-                <input type="radio" value="3" onChange={(e) => Setcrowd(e.target.value)} name="rd5"></input>
-                <label>Level 3</label><br />
-                <input type="radio" value="4" onChange={(e) => Setcrowd(e.target.value)} name="rd5"></input>
-                <label>Level 4</label><br />
-                <input type="radio" value="5" onChange={(e) => Setcrowd(e.target.value)} name="rd5"></input>
-                <label>Level 5</label><br />
-                <input type="radio" value="6" onChange={(e) => Setcrowd(e.target.value)} name="rd5"></input>
-                <label>Level 6</label>
+                <select name='crowd-level' className='drop-down' onChange={(e) => Setcrowd(e.target.value)}>
+                <option value="">select</option>
+                    <option value="1">Level-1</option>
+                    <option value="2">Level-2</option>
+                    <option value="3">Level-3</option>
+                    <option value="4">Level-4</option>
+                    <option value="5">Level-5</option>
+                    <option value="6">Level-6</option>
+
+                </select>
             </div>
             <button onClick={() => {
                 // collectdata();
